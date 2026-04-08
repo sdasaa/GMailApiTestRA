@@ -1,0 +1,11 @@
+version: '3'
+services:
+  restAssuredTestNG:
+    image: 'sdasa/restatestng'
+    #container_name: 'restAssuredTestNG'
+    tty: false
+    stdin_open: false
+    env_file:
+      - ./configurations.env
+    volumes:
+      - D:\MyWorkspace\IDE_Workspaces\IntelliJ_Workspace\GMailApiTestRA\zObsolete\mappedVolume\resultsArchive:/home/das/restAssuredTestNG/resultsArchive

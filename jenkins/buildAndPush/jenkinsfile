@@ -1,0 +1,20 @@
+pipeline{
+    agent{
+        label : "docker"
+    }
+
+    stages{
+        stage("Compile Project"){
+            steps{
+                sh "mvn clean verify -DskipTests"
+            }
+
+        }
+
+        stage('Docker build'){
+            steps{
+                image = docker.build('sdasa/restatestng', ['-f ./cn/Dockerfile --no-cache .'])
+            }
+        }
+    }
+}

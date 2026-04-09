@@ -1,19 +1,34 @@
 pipeline{
+
     agent{
         label 'docker'
     }
 
-    stages{
-        stage("Compile Project"){
-            steps{
-                sh "mvn clean verify -DskipTests"
-            }
+    environment{
+        IMAGE_NAME="sdasa/restatestng:${env.BUILD_ID}"
+    }
 
+    stages{
+        stage('Maven Compile Project'){
+            steps{
+                sh 'mvn clean verify -DskipTests'
+            }
         }
 
-        stage('Docker build'){
+        stage('Docker build Image'){
             steps{
-                image = docker.build('sdasa/restatestng', ['-f ./cn/Dockerfile --no-cache .'])
+                script{
+                    image=docker.build("${IMAGE_NAME}", "-f ./cn/Dockerfile --no-cache .")
+                }
+            }
+        }
+
+        stage('Push Docker Image'){
+            steps{
+                script{
+                    docker.withDockerRegistry('', 'DockerHubPersonalToken2')
+                    image.push()
+                }
             }
         }
     }

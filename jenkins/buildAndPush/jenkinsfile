@@ -18,7 +18,7 @@ pipeline{
         stage('Docker build Image'){
             steps{
                 script{
-                    image=docker.build("${IMAGE_NAME}", "-f ./cn/Dockerfile --no-cache .")
+                    builtImage =docker.build("${IMAGE_NAME}", "-f ./cn/Dockerfile --no-cache .")
                 }
             }
         }
@@ -26,8 +26,9 @@ pipeline{
         stage('Push Docker Image'){
             steps{
                 script{
-                    docker.withDockerRegistry('', 'DockerHubPersonalToken2')
-                    image.push()
+                    docker.withRegistry('', 'DockerHubPersonalToken2'){
+                        builtImage.push()
+                    }
                 }
             }
         }

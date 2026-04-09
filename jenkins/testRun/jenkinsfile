@@ -1,0 +1,33 @@
+pipeline{
+    agent{
+        label 'docker'
+    }
+
+    environment{
+        SECRET_FILE_ID="GMailApiTestRA_config.env"
+        CONFIG_DESTINATION_DIR="./cn/"
+
+    }
+
+    stages{
+        stage('Copy configurations.env to cn dir'){
+            steps{
+                withCredentials([file(credentialsId: "${SECRET_FILE_ID}", variable: 'SECRET_FILE')]) {
+                    sh "cp ${SECRET_FILE} ${CONFIG_DESTINATION_DIR}/configurations.env"
+                }
+            }
+        }
+        
+        stage('Trigger Test suite run'){
+            steps{
+                sh 'docker compose -f ./cn/testRunner.yaml up --pull always --abort-on-container-exit --exit-code-from restAssuredTestNG < /dev/null'
+            }
+        }
+    }
+
+    post{
+        always{
+            sh 'docker compose -f ./cn/testRunner.yaml down'
+        }
+    }
+}

@@ -20,7 +20,7 @@ pipeline{
         
         stage('Trigger Test suite run'){
             steps{
-                sh 'docker compose -f ./cn/testRunner.yaml up --pull always --abort-on-container-exit --exit-code-from restAssuredTestNG < /dev/null'
+                sh 'docker compose --env-file ./cn/configurations.env -f ./cn/testRunner.yaml up --pull always --abort-on-container-exit --exit-code-from restAssuredTestNG < /dev/null'
             }
         }
     }

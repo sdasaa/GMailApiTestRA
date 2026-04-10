@@ -28,6 +28,7 @@ pipeline{
     post{
         always{
             sh 'docker compose -f ./cn/testRunner.yaml down'
+            archiveArtifacts artifacts: './resultsArchive/test-output/emailable-report.html', followSymlinks: false
         }
     }
 }
